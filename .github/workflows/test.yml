@@ -4,13 +4,14 @@ on: [push, pull_request]
 
 jobs:
   ci:
-    name: Test on PHP ${{ matrix.php-version }} Swoole ${{ matrix.swoole-version }}
+    name: Test on PHP${{ matrix.php-version }} Swoole${{ matrix.swoole-version }} Search${{ matrix.es-version }}
     runs-on: '${{ matrix.os }}'
     strategy:
       matrix:
         os: [ubuntu-latest]
         php-version: ['7.3', '7.4']
         swoole-version: ['4.5.10', '4.6.0']
+        es-version: ['5-alpine', '6.8.13', '7.10.1']
       max-parallel: 3
     env:
       SW_VERSION: ${{ matrix.swoole-version }}
@@ -24,6 +25,8 @@ jobs:
           tools: phpize
           ini-values: extension=swoole, opcache.enable_cli=1, swoole.use_shortname='Off'
           coverage: none
+      - name: Setup Elasticsearch
+        run: docker run -d --restart always -p 9200:9200 -p 9300:9300 -e "discovery.type=single-node" -e ES_JAVA_OPTS="-Xms512m -Xmx512m" --name elasticsearch elasticsearch:${{ matrix.es-version }}
       - name: Setup Swoole
         run: |
           wget https://github.com/swoole/swoole-src/archive/v${SW_VERSION}.tar.gz -O swoole.tar.gz
