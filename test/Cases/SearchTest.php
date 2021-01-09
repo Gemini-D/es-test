@@ -13,6 +13,7 @@ namespace HyperfTest\Cases;
 
 use App\Constants\Indices;
 use App\Search\ClientFactory;
+use Hyperf\Utils\Codec\Json;
 use HyperfTest\HttpTestCase;
 
 /**
@@ -42,7 +43,8 @@ class SearchTest extends HttpTestCase
         ];
 
         $res = $client->search($this->format($client, $params));
-        dump('Search: ', $res);
+        echo 'Search:' . PHP_EOL;
+        echo Json::encode($res) . PHP_EOL;
         if (version_compare($this->version, '7.0', '>=')) {
             $this->assertSame(2, $res['hits']['total']['value']);
         } else {
