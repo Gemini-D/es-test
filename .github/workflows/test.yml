@@ -40,6 +40,8 @@ jobs:
           sudo make install
       - name: Setup Packages
         run: composer update -o
+      - name: Setup Search Data
+        run: php bin/hyperf.php init:search
       - name: Run Test Cases
         run: |
           composer analyse
