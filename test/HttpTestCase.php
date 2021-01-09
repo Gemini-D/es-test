@@ -11,6 +11,7 @@ declare(strict_types=1);
  */
 namespace HyperfTest;
 
+use Elasticsearch\Client;
 use Hyperf\Testing;
 use PHPUnit\Framework\TestCase;
 
@@ -28,6 +29,11 @@ abstract class HttpTestCase extends TestCase
      */
     protected $client;
 
+    /**
+     * @var string
+     */
+    protected $version;
+
     public function __construct($name = null, array $data = [], $dataName = '')
     {
         parent::__construct($name, $data, $dataName);
@@ -38,5 +44,18 @@ abstract class HttpTestCase extends TestCase
     public function __call($name, $arguments)
     {
         return $this->client->{$name}(...$arguments);
+    }
+
+    protected function format(Client $client, array $params)
+    {
+        if (empty($this->version)) {
+            $this->version = $client->info()['version']['number'];
+        }
+
+        if (version_compare($this->version, '7.0.0', '>=')) {
+            unset($params['type']);
+        }
+
+        return $params;
     }
 }
