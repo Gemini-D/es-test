@@ -4,12 +4,12 @@ on: [push, pull_request]
 
 jobs:
   ci:
-    name: Test on PHP${{ matrix.php-version }} Swoole${{ matrix.swoole-version }} Search${{ matrix.es-version }}
+    name: Test on Swoole${{ matrix.swoole-version }} Search${{ matrix.es-version }}
     runs-on: '${{ matrix.os }}'
     strategy:
       matrix:
         os: [ubuntu-latest]
-        php-version: ['7.3', '7.4']
+        php-version: ['7.4']
         swoole-version: ['4.5.10', '4.6.0']
         es-version: ['5-alpine', '6.8.13', '7.10.1']
       max-parallel: 6
